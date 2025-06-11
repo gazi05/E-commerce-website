@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="images/logo.jpg" type="image/x-icon"/>
+  <link rel="stylesheet" href="cart_style.css" />
+  <title>Your Shopping Cart</title>
+</head>
+<body>
+  <header>
+    <h1>Your Shopping Cart</h1>
+  </header>
+  <nav>
+    <button><a href="index.html">Continue Shopping</a></button>
+  </nav>
+
+  <main>
+    <div id="product-container"></div>
+    <h3 id="total-price"></h3>
+    <button id="checkout-btn">Checkout</button>
+  </main>
+
+  <script>
+    // Get cart items from localStorage or use empty array if none
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+   
+    const cartContainer = document.getElementById('product-container');
+    const totalPriceElement = document.getElementById('total-price');
+    const checkoutBtn = document.getElementById('checkout-btn');
+
+    // Function to display cart items
+    function renderCart() {
+      cartContainer.innerHTML = ''; 
+
+      if (cartItems.length === 0) {
+        cartContainer.textContent = "Your cart is empty.";
+        totalPriceElement.textContent = '';
+        checkoutBtn.style.display = 'none'; 
+        return;
+      }
+
+      let total = 0; 
+
+      // Display each item in the cart
+      cartItems.forEach((item, index) => {
+        total += item.price; // Add item price to total
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'cart-item';
+        itemDiv.innerHTML = `
+          <h3>${item.type}</h3>
+          <h2>${item.name}</h2>
+          <img src="${item.image}" alt="${item.name}" />
+          <p>Price: $${item.price.toFixed(2)}</p>
+          <button class="remove-item" data-index="${index}">Remove</button>
+        `;
+        cartContainer.appendChild(itemDiv);
+      });
+
+      // Show total price and checkout button
+      totalPriceElement.textContent = `Total: $${total.toFixed(2)}`;
+      checkoutBtn.style.display = 'inline-block';
+
+      // Add event listeners to all remove buttons
+      document.querySelectorAll('.remove-item').forEach(button => {
+        button.addEventListener('click', (e) => {
+          const index = e.target.getAttribute('data-index');
+          removeItem(index); // Remove item when clicked
+        });
+      });
+    }
+
+    // Remove item from cart by index
+    function removeItem(index) {
+      cartItems.splice(index, 1); // Remove one item at index
+      localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Update localStorage
+      renderCart(); // Refresh cart display
+    }
+
+    // Checkout button event
+    checkoutBtn.addEventListener('click', () => {
+      if (cartItems.length === 0) return; // Do nothing if cart is empty
+      alert('Thank you for your purchase! Your products will be delivered soon.');
+      cartItems = []; // Clear cart
+      localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Update localStorage
+      renderCart(); // Refresh cart display
+    });
+
+    // Initial render when page loads
+    renderCart();
+  </script>
+</body>
+</html>
