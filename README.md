@@ -2,7 +2,7 @@
 
 This is a modern e-commerce website project built with HTML, CSS, and JavaScript. The goal is to provide users with an interactive and user-friendly shopping experience.
 
-## 🔗 Live Demo
+## 🔗 Live Demo using render 
 
 👉 [Click here to view the live website](https://e-commerce-website-0lr5.onrender.com)
 
